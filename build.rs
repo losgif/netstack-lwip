@@ -70,9 +70,10 @@ fn compile_lwip() {
         .include("src/lwip/include")
         .warnings(false)
         .flag_if_supported("-Wno-everything");
-    if let Some(sdk_include_path) = sdk_include_path() {
-        build.include(sdk_include_path);
-    }
+    // ios not need below include path
+    // if let Some(sdk_include_path) = sdk_include_path() {
+    //     build.include(sdk_include_path);
+    // }
     build.compile("liblwip.a");
 }
 
@@ -97,7 +98,7 @@ fn generate_lwip_bindings() {
         builder = builder.clang_arg("--target=arm64-apple-ios");
     }
     if let Some(sdk_include_path) = sdk_include_path {
-        builder = builder.clang_arg(format!("-I{}", sdk_include_path));
+        builder = builder.clang_arg(format!("-I {}", sdk_include_path)); // this place need a space between -I and {}
     }
     let bindings = builder.generate().expect("Unable to generate bindings");
 
